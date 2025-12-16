@@ -1,0 +1,48 @@
+{
+    "name": "kammi",
+    "version": "1.0.0",
+    "description": "A minimalist writing refuge for creative professionals",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "build": "electron-builder",
+        "build:mac": "electron-builder --mac",
+        "build:win": "electron-builder --win"
+    },
+    "author": "Olli Laitinen",
+    "license": "MIT",
+    "build": {
+        "appId": "app.kammi.writer",
+        "productName": "Kammi",
+        "directories": {
+            "output": "dist"
+        },
+        "files": [
+            "main.js",
+            "preload.js",
+            "src/**/*",
+            "assets/**/*"
+        ],
+        "mac": {
+            "category": "public.app-category.productivity",
+            "icon": "assets/icon.png",
+            "target": [
+                "dmg"
+            ]
+        },
+        "win": {
+            "icon": "assets/icon.png",
+            "target": [
+                "nsis"
+            ]
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true
+        }
+    },
+    "devDependencies": {
+        "electron": "^33.0.0",
+        "electron-builder": "^25.1.8"
+    }
+}
