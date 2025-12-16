@@ -803,13 +803,18 @@
 
         function startWriting() {
             showScreen('writing');
+            // Multiple focus attempts to ensure it works across platforms
             els.textarea.focus();
             requestAnimationFrame(() => els.textarea.focus());
+            setTimeout(() => els.textarea.focus(), 50);
+            setTimeout(() => els.textarea.focus(), 150);
         }
 
         function resumeWriting() {
             showScreen('writing');
             els.textarea.focus();
+            requestAnimationFrame(() => els.textarea.focus());
+            setTimeout(() => els.textarea.focus(), 50);
         }
 
         function openSettings() {
@@ -857,6 +862,18 @@
                 }
             }, AUTOSAVE_DELAY);
         }
+
+        // Save before closing (ensures Windows saves session)
+        window.addEventListener('beforeunload', async () => {
+            const content = els.textarea.value;
+            if (content.trim() && sessionFilename) {
+                await window.kammi.saveContent(sessionFilename, content);
+                if (settings.lastSessionFile !== sessionFilename) {
+                    settings.lastSessionFile = sessionFilename;
+                    await window.kammi.saveSettings(settings);
+                }
+            }
+        });
 
         // Start
         init();
