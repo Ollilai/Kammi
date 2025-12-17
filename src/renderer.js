@@ -13,6 +13,8 @@ let sessionFilename = '';
 let saveTimeout = null;
 let selectedTheme = null;  // For onboarding preview
 let editor = null;  // Tiptap editor instance
+import { BubbleMenu } from '@tiptap/extension-bubble-menu'
+
 const AUTOSAVE_DELAY = 1000;
 
 // Theme presets
@@ -108,6 +110,21 @@ function initEditor() {
                 // We'll start with just bold and italic from StarterKit
                 // These are included by default
             }),
+            BubbleMenu.configure({
+                element: document.querySelector('.bubble-menu'),
+                tippyOptions: {
+                    duration: 200,
+                    animation: 'shift-away',
+                    zIndex: 999,
+                    placement: 'top',
+                    offset: [0, 15], // Move it 15px away from text
+                    maxWidth: 'none', // Allow it to be as wide as needed
+                },
+                shouldShow: ({ editor, view, state, from, to }) => {
+                    // Only show if selection is not empty and editor is focused
+                    return !state.selection.empty && editor.isFocused;
+                },
+            }),
         ],
         content: '',
         editorProps: {
@@ -118,6 +135,19 @@ function initEditor() {
         },
         onUpdate: ({ editor }) => {
             handleInput();
+
+            // Update Bubble Menu states
+            document.getElementById('bold-btn').classList.toggle('is-active', editor.isActive('bold'));
+            document.getElementById('italic-btn').classList.toggle('is-active', editor.isActive('italic'));
+            document.getElementById('bullet-btn').classList.toggle('is-active', editor.isActive('bulletList'));
+            document.getElementById('number-btn').classList.toggle('is-active', editor.isActive('orderedList'));
+        },
+        onSelectionUpdate: ({ editor }) => {
+            // Validate states on selection change too
+            document.getElementById('bold-btn').classList.toggle('is-active', editor.isActive('bold'));
+            document.getElementById('italic-btn').classList.toggle('is-active', editor.isActive('italic'));
+            document.getElementById('bullet-btn').classList.toggle('is-active', editor.isActive('bulletList'));
+            document.getElementById('number-btn').classList.toggle('is-active', editor.isActive('orderedList'));
         },
     });
 }
@@ -297,6 +327,28 @@ function setupEventListeners() {
 
     document.getElementById('settings-save').addEventListener('click', saveSettings);
     document.getElementById('settings-cancel').addEventListener('click', resumeWriting);
+
+    // Bubble Menu Buttons
+    const boldBtn = document.getElementById('bold-btn');
+    const italicBtn = document.getElementById('italic-btn');
+    const bulletBtn = document.getElementById('bullet-btn');
+    const numberBtn = document.getElementById('number-btn');
+
+    boldBtn.addEventListener('click', () => {
+        editor.chain().focus().toggleBold().run();
+    });
+
+    italicBtn.addEventListener('click', () => {
+        editor.chain().focus().toggleItalic().run();
+    });
+
+    bulletBtn.addEventListener('click', () => {
+        editor.chain().focus().toggleBulletList().run();
+    });
+
+    numberBtn.addEventListener('click', () => {
+        editor.chain().focus().toggleOrderedList().run();
+    });
 }
 
 // ========================================

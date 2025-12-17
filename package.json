@@ -52,6 +52,7 @@
     },
     "dependencies": {
         "@tiptap/core": "^3.13.0",
+        "@tiptap/extension-bubble-menu": "^3.13.0",
         "@tiptap/pm": "^3.13.0",
         "@tiptap/starter-kit": "^3.13.0"
     }
