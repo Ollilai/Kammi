@@ -4,9 +4,14 @@
  * Handles: window creation, file saving, and settings storage.
  */
 
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
+
+// Open URL in default browser
+ipcMain.handle('open-external', async (event, url) => {
+    await shell.openExternal(url);
+});
 
 // Paths
 let mainWindow;
@@ -97,6 +102,37 @@ ipcMain.handle('read-content', async (event, filename) => {
         return { success: true, content };
     } catch (error) {
         console.error('Read failed:', error);
+        return { success: false, error: error.message };
+    }
+});
+
+/**
+ * LIST SESSIONS: Get all session files sorted by modification date
+ */
+ipcMain.handle('list-sessions', async () => {
+    try {
+        ensureKammiFolder();
+        const files = await fs.promises.readdir(KAMMI_DIR);
+        const sessions = [];
+
+        for (const file of files) {
+            if (file.endsWith('.html') && !file.endsWith('.tmp')) {
+                const filePath = path.join(KAMMI_DIR, file);
+                const stats = await fs.promises.stat(filePath);
+                sessions.push({
+                    filename: file,
+                    modified: stats.mtime.getTime(),
+                    displayName: file.replace('.html', '')
+                });
+            }
+        }
+
+        // Sort by modification date, newest first
+        sessions.sort((a, b) => b.modified - a.modified);
+
+        return { success: true, sessions };
+    } catch (error) {
+        console.error('List sessions failed:', error);
         return { success: false, error: error.message };
     }
 });

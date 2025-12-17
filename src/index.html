@@ -49,7 +49,8 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: var(--font-family);
-            font-size: var(--font-size);
+            font-size: 16px;
+            /* Fixed base for UI elements */
             line-height: var(--line-height);
         }
 
@@ -184,8 +185,8 @@
         }
 
         .theme-paper {
-            background: #f5f5dc;
-            color: #3d3d3d;
+            background: #faf8f0;
+            color: #4a4a4a;
         }
 
         .theme-focus {
@@ -501,6 +502,12 @@
         <div id="greeting-options" style="margin-top: 2rem; text-align: center;">
             <p id="greeting-continue" style="cursor: pointer; margin-bottom: 1rem; display: none;">Continue your last
                 piece</p>
+            <p id="greeting-browse"
+                style="cursor: pointer; margin-bottom: 1rem; color: var(--text-color-dim); display: none;">Browse all
+                sessions</p>
+            <div id="session-list"
+                style="display: none; margin-bottom: 1rem; max-height: 200px; overflow-y: auto; text-align: left; padding: 0 2rem;">
+            </div>
             <p id="greeting-new" class="greeting-hint" style="cursor: pointer;">Start new</p>
         </div>
     </div>
@@ -552,12 +559,17 @@
                     style="width: 80px; height: 50px; background: #1a1a1a; color: #c4b69c; border: 1px solid var(--text-color-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75em;">
                     Midnight</div>
                 <div class="theme-preset" data-theme="paper"
-                    style="width: 80px; height: 50px; background: #f5f5dc; color: #3d3d3d; border: 1px solid var(--text-color-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75em;">
+                    style="width: 80px; height: 50px; background: #faf8f0; color: #4a4a4a; border: 1px solid var(--text-color-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75em;">
                     Paper</div>
                 <div class="theme-preset" data-theme="focus"
                     style="width: 80px; height: 50px; background: #ffffff; color: #1a1a1a; border: 1px solid var(--text-color-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75em;">
                     Focus</div>
+                <div class="theme-preset" data-theme="saved" id="saved-theme-tile"
+                    style="width: 80px; height: 50px; border: 2px dashed var(--text-color-dim); display: none; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75em;">
+                    Saved</div>
             </div>
+            <button id="save-theme-btn" class="settings-btn" style="margin-top: 0.75rem; font-size: 0.85em;">Save
+                Current</button>
         </div>
 
         <div class="settings-group">
@@ -565,19 +577,13 @@
             <div id="font-options" style="display: flex; flex-direction: column; gap: 0.5rem;">
                 <div class="font-option" data-font="Georgia, serif"
                     style="font-family: Georgia, serif; padding: 0.5rem; border: 1px solid var(--text-color-dim); cursor: pointer;">
-                    Georgia - The quick brown fox</div>
-                <div class="font-option" data-font="'Times New Roman', serif"
-                    style="font-family: 'Times New Roman', serif; padding: 0.5rem; border: 1px solid var(--text-color-dim); cursor: pointer;">
-                    Times New Roman - The quick brown fox</div>
-                <div class="font-option" data-font="Inter, sans-serif"
-                    style="font-family: Inter, sans-serif; padding: 0.5rem; border: 1px solid var(--text-color-dim); cursor: pointer;">
-                    Inter - The quick brown fox</div>
-                <div class="font-option" data-font="Arial, sans-serif"
-                    style="font-family: Arial, sans-serif; padding: 0.5rem; border: 1px solid var(--text-color-dim); cursor: pointer;">
-                    Arial - The quick brown fox</div>
+                    Georgia — warm, designed for screens</div>
+                <div class="font-option" data-font="Palatino, 'Palatino Linotype', serif"
+                    style="font-family: Palatino, 'Palatino Linotype', serif; padding: 0.5rem; border: 1px solid var(--text-color-dim); cursor: pointer;">
+                    Palatino — literary, quietly elegant</div>
                 <div class="font-option" data-font="'Courier New', monospace"
                     style="font-family: 'Courier New', monospace; padding: 0.5rem; border: 1px solid var(--text-color-dim); cursor: pointer;">
-                    Courier New - The quick brown fox</div>
+                    Courier New — typewriter rhythm</div>
             </div>
             <input type="hidden" id="settings-font" value="Georgia, serif">
         </div>

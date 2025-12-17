@@ -20,8 +20,8 @@ const AUTOSAVE_DELAY = 1000;
 // Theme presets
 const THEMES = {
     midnight: { fontFamily: 'Georgia, serif', fontSize: 20, bgColor: '#1a1a1a', textColor: '#c4b69c' },
-    paper: { fontFamily: "'Times New Roman', serif", fontSize: 20, bgColor: '#f5f5dc', textColor: '#3d3d3d' },
-    focus: { fontFamily: 'Inter, sans-serif', fontSize: 20, bgColor: '#ffffff', textColor: '#1a1a1a' }
+    paper: { fontFamily: "Palatino, 'Palatino Linotype', serif", fontSize: 20, bgColor: '#faf8f0', textColor: '#4a4a4a' },
+    focus: { fontFamily: "'Courier New', monospace", fontSize: 20, bgColor: '#ffffff', textColor: '#1a1a1a' }
 };
 
 // DOM
@@ -229,6 +229,7 @@ function setupEventListeners() {
 
     // Greeting: Continue vs New
     document.getElementById('greeting-continue').addEventListener('click', continueLastSession);
+    document.getElementById('greeting-browse').addEventListener('click', showSessionList);
     document.getElementById('greeting-new').addEventListener('click', startNewSession);
 
     // ESC key
@@ -248,8 +249,8 @@ function setupEventListeners() {
     // Menu items
     document.getElementById('menu-resume').addEventListener('click', resumeWriting);
     document.getElementById('menu-settings').addEventListener('click', openSettings);
-    document.getElementById('menu-privacy').addEventListener('click', () => alert('Privacy Policy coming soon'));
-    document.getElementById('menu-support').addEventListener('click', () => alert('Support: hello@kammi.app'));
+    document.getElementById('menu-privacy').addEventListener('click', () => window.kammi.openExternal('https://kammi-git-main-olli-laitinens-projects.vercel.app/privacy'));
+    document.getElementById('menu-support').addEventListener('click', () => window.kammi.openExternal('https://kammi-git-main-olli-laitinens-projects.vercel.app/support'));
     document.getElementById('menu-quit').addEventListener('click', () => window.close());
 
     // Settings controls - LIVE PREVIEW on all changes
@@ -304,7 +305,16 @@ function setupEventListeners() {
     document.querySelectorAll('.theme-preset').forEach(preset => {
         preset.addEventListener('click', () => {
             const themeName = preset.dataset.theme;
-            const theme = THEMES[themeName];
+
+            // Handle saved theme specially
+            let theme;
+            if (themeName === 'saved' && settings.savedTheme) {
+                theme = settings.savedTheme;
+            } else if (THEMES[themeName]) {
+                theme = THEMES[themeName];
+            } else {
+                return; // Unknown theme
+            }
 
             // Update form values to match preset
             els.settingsBgcolor.value = theme.bgColor;
@@ -327,6 +337,25 @@ function setupEventListeners() {
 
     document.getElementById('settings-save').addEventListener('click', saveSettings);
     document.getElementById('settings-cancel').addEventListener('click', resumeWriting);
+
+    // Save Current Theme button
+    document.getElementById('save-theme-btn').addEventListener('click', async () => {
+        // Capture current form values as saved theme
+        settings.savedTheme = {
+            fontFamily: els.settingsFont.value,
+            fontSize: parseInt(els.settingsFontsize.value),
+            bgColor: els.settingsBgcolor.value,
+            textColor: getContrastColor(els.settingsBgcolor.value)
+        };
+        await window.kammi.saveSettings(settings);
+
+        // Update the Saved tile appearance and show it
+        const savedTile = document.getElementById('saved-theme-tile');
+        savedTile.style.display = 'flex';
+        savedTile.style.background = settings.savedTheme.bgColor;
+        savedTile.style.color = settings.savedTheme.textColor;
+        savedTile.style.borderStyle = 'solid';
+    });
 
     // Bubble Menu Buttons
     const boldBtn = document.getElementById('bold-btn');
@@ -354,11 +383,12 @@ function setupEventListeners() {
 // ========================================
 // SCREEN HANDLERS
 // ========================================
-function showGreeting() {
+async function showGreeting() {
     els.greetingText.textContent = `${getTimeGreeting()}, ${settings.name}`;
 
     // Show Continue option if there's a last session
     const continueBtn = document.getElementById('greeting-continue');
+    const browseBtn = document.getElementById('greeting-browse');
     const newBtn = document.getElementById('greeting-new');
 
     if (settings.lastSessionFile) {
@@ -369,7 +399,64 @@ function showGreeting() {
         newBtn.textContent = 'Click anywhere to begin';
     }
 
+    // Check if there are any sessions to browse
+    const sessionsResult = await window.kammi.listSessions();
+    if (sessionsResult.success && sessionsResult.sessions.length > 0) {
+        browseBtn.style.display = 'block';
+    } else {
+        browseBtn.style.display = 'none';
+    }
+
     showScreen('greeting');
+}
+
+async function showSessionList() {
+    const sessionList = document.getElementById('session-list');
+    const browseBtn = document.getElementById('greeting-browse');
+
+    // Toggle visibility
+    if (sessionList.style.display === 'block') {
+        sessionList.style.display = 'none';
+        browseBtn.textContent = 'Browse all sessions';
+        return;
+    }
+
+    // Load and display sessions
+    const result = await window.kammi.listSessions();
+    if (!result.success || result.sessions.length === 0) {
+        return;
+    }
+
+    sessionList.innerHTML = result.sessions.map(session => `
+        <p class="session-item" data-filename="${session.filename}" 
+           style="cursor: pointer; padding: 0.3rem 0; border-bottom: 1px solid var(--text-color-dim); opacity: 0.8;">
+            ${session.displayName}
+        </p>
+    `).join('');
+
+    // Add click handlers
+    sessionList.querySelectorAll('.session-item').forEach(item => {
+        item.addEventListener('click', () => loadSession(item.dataset.filename));
+    });
+
+    sessionList.style.display = 'block';
+    browseBtn.textContent = 'Hide sessions';
+}
+
+async function loadSession(filename) {
+    sessionFilename = filename;
+
+    // Load content
+    const result = await window.kammi.readContent(filename);
+    if (result.success) {
+        editor.commands.setContent(result.content);
+    }
+
+    // Update last session
+    settings.lastSessionFile = filename;
+    await window.kammi.saveSettings(settings);
+
+    startWriting();
 }
 
 async function continueLastSession() {
@@ -415,6 +502,18 @@ function openSettings() {
     els.fontSizeValue.textContent = theme.fontSize;
     els.settingsBgcolor.value = theme.bgColor;
     els.settingsBgcolorHex.value = theme.bgColor;
+
+    // Show Saved tile if a saved theme exists
+    const savedTile = document.getElementById('saved-theme-tile');
+    if (settings.savedTheme) {
+        savedTile.style.display = 'flex';
+        savedTile.style.background = settings.savedTheme.bgColor;
+        savedTile.style.color = settings.savedTheme.textColor;
+        savedTile.style.borderStyle = 'solid';
+    } else {
+        savedTile.style.display = 'none';
+    }
+
     showScreen('settings');
 }
 
