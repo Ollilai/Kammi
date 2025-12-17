@@ -1,96 +1,148 @@
-# Kammi Landing Page - Lovable Prompt
-
-## What is Kammi?
-Kammi is a minimalist desktop writing application for Mac and Windows. It's designed as a **refuge for writers** — distraction-free, warm, and personal. Think of it as the digital equivalent of writing with pen and paper in a cozy cabin.
+# Kammi Landing Page Specification
 
 ## Brand Philosophy
-- **A refuge, not a productivity tool**
+- **A refuge for writers** — not a productivity tool
 - **Kind, safe, eloquent, beautiful**
 - **Immersive** — fullscreen by default, no UI noise
 - **Personal** — greets you by name ("Good evening, Olli")
-- **Target audience**: Creative professionals — novelists, playwrights, journalers
+- **Target**: Creative professionals — novelists, playwrights, journalers
 
 ---
 
 ## Design System
 
-### Colors (Dark Theme - Primary)
-| Name | Hex | Usage |
-|------|-----|-------|
-| Background | `#1a1a1a` | Main background |
-| Text | `#c4b69c` | Body text (warm sepia) |
-| Text Dim | `rgba(196, 182, 156, 0.4)` | Secondary/hint text |
-| Accent | `#c4b69c` | Buttons, links (same as text) |
+### Theme Presets
 
-### Colors (Light Theme - Optional Sections)
-| Name | Hex | Usage |
-|------|-----|-------|
-| Background | `#f5f5dc` | Light sections |
-| Text | `#3d3d3d` | Dark text on light |
+| Theme | Background | Text | Font | Mood |
+|-------|------------|------|------|------|
+| **Midnight** (default) | `#1a1a1a` | `#c4b69c` | Georgia | Cozy, night owl |
+| **Paper** | `#faf8f0` | `#4a4a4a` | Palatino | Literary, timeless |
+| **Focus** | `#ffffff` | `#1a1a1a` | Courier New | Stark, typewriter |
 
 ### Typography
-- **Primary Font**: Georgia, serif (literary, classic)
-- **Fallback**: Times New Roman, serif
-- **Headings**: Same font, larger size, italic for elegance
-- **Body**: 18-20px, line-height 1.8
+| Font | Usage | Mood |
+|------|-------|------|
+| **Georgia, serif** | Warm, screen-optimized | Disappears while you write |
+| **Palatino, 'Palatino Linotype', serif** | Literary, elegant | Classical book feel |
+| **'Courier New', monospace** | Typewriter rhythm | Forward momentum |
+
+- **Body size**: 20px default (adjustable 14-32px)
+- **Line height**: 1.6
+- **Headings**: Same font, italic for elegance
 
 ### Visual Style
 - **Minimal** — No borders, shadows, or visual noise
-- **Warm** — Sepia tones, not harsh whites or blacks
-- **Elegant** — Subtle transitions (1-1.5s), italic headings
-- **Fullscreen feel** — Generous padding/margins
+- **Warm** — Sepia tones in dark mode, cream in light
+- **Elegant** — Subtle transitions, generous whitespace
+- **Fullscreen feel** — Centered content, responsive padding
+
+---
+
+## Features (v1.0.2)
+
+### Core
+1. **Personal Greeting** — "Good evening, Olli" based on time of day
+2. **Auto-Save** — Continuous save to ~/Documents/Kammi
+3. **Session Picker** — Browse and resume any previous session
+4. **Theme Presets** — Midnight, Paper, Focus + custom save
+
+### Text Formatting
+- **Bubble Menu** — Appears on text selection
+- **Bold / Italic / Bullet List / Numbered List**
+- **Keyboard shortcuts** — Cmd+B, Cmd+I
+
+### Customization
+- **Save Custom Theme** — Preserve your settings as a preset
+- **Font Selection** — Georgia, Palatino, Courier New
+- **Font Size** — 14-32px slider
+- **Background Color** — Picker + hex input
 
 ---
 
 ## Page Structure
 
 ### Hero Section
-**Background**: `#1a1a1a`
-**Layout**: Centered, fullscreen height (100vh)
+**Background**: `#1a1a1a`  
+**Layout**: Centered, 100vh
 
 **Content**:
-- **Tagline** (large, italic): "A refuge for writers"
+- **Tagline** (large, italic Georgia): "A refuge for writers"
 - **Subheading**: "Distraction-free. Personal. Beautiful."
-- **CTA Button**: "Download for Mac" (primary) + "Windows" (secondary link)
-- **Optional**: Subtle screenshot/mockup of the app showing the greeting screen
+- **CTA**: "Download for Mac" + "Windows" link
+- **Theme Showcase**: Optional 3 tiles showing Midnight/Paper/Focus
 
-### Features Section (Optional)
-**Background**: `#1a1a1a` or slightly lighter
-**Layout**: 3 columns or stacked on mobile
+### Features Section
+**Background**: `#1a1a1a`  
+**Layout**: 3 columns or stacked mobile
 
-**Features**:
 1. **Personal Greeting** — "Kammi greets you by name and time of day"
-2. **Auto-Save** — "Your words are saved continuously. Never lose a thought."
-3. **Session Resume** — "Pick up exactly where you left off"
+2. **Auto-Save** — "Your words are saved continuously"
+3. **Session Picker** — "Browse and resume any of your writing sessions"
+4. **Save Your Theme** — "Customize colors and fonts, save as your preset"
 
 ### Download Section
-**Background**: `#f5f5dc` (light, for contrast)
-**Text**: `#3d3d3d`
+**Background**: `#faf8f0` (Paper theme)  
+**Text**: `#4a4a4a`
 
-**Pricing Model**: $9 one-time OR free scholarship
-- **Primary CTA**: "Get Kammi — $9" (one-time, forever yours)
-- **Secondary**: "Can't afford it? Request a scholarship" (link to simple form or email)
+**Model**: $9 one-time OR free scholarship
+- **CTA**: "Get Kammi — $9" 
+- **Secondary**: "Can't afford it? Request a scholarship"
 - **Message**: "No subscriptions. No accounts. Pay once, own forever."
-- **Scholarship note**: "If $9 is a barrier, just ask. No questions, no judgment."
 
-**Download buttons**: 
-- Mac (.dmg) 
-- Windows (.exe)
-
-**Copy**:
-> "Kammi costs $9 — less than two coffees. 
-> If that's a hardship, request a free scholarship. 
-> No questions asked. Writers support writers."
+**Download buttons**:
+- Mac (.dmg): `https://github.com/Ollilai/Kammi/releases/latest`
+- Windows (.exe): `https://github.com/Ollilai/Kammi/releases/latest`
 
 ### Footer
-**Background**: `#1a1a1a`
-**Content**:
-- Links: Privacy Policy | Support | GitHub (optional)
-- Copyright: "© 2024 Kammi"
+**Background**: `#1a1a1a`  
+**Links**: 
+- Privacy: `/privacy`
+- Support: `/support`
+- GitHub (optional): `https://github.com/Ollilai/Kammi`
 
 ---
 
-## Copy Suggestions
+## Pages
+
+| Page | Purpose |
+|------|---------|
+| `/` | Landing — Hero, features, download, footer |
+| `/privacy` | Privacy policy |
+| `/support` | Support contact / FAQ |
+
+---
+
+## CSS Variables (for website)
+
+```css
+:root {
+    /* Midnight (default) */
+    --bg-color: #1a1a1a;
+    --text-color: #c4b69c;
+    --text-color-dim: rgba(196, 182, 156, 0.4);
+    --font-family: Georgia, serif;
+    --font-size: 20px;
+    --line-height: 1.6;
+}
+
+/* Paper theme section */
+.theme-paper {
+    --bg-color: #faf8f0;
+    --text-color: #4a4a4a;
+    --font-family: Palatino, 'Palatino Linotype', serif;
+}
+
+/* Focus theme section */
+.theme-focus {
+    --bg-color: #ffffff;
+    --text-color: #1a1a1a;
+    --font-family: 'Courier New', monospace;
+}
+```
+
+---
+
+## Copy
 
 ### Hero
 > **A refuge for writers.**
@@ -98,45 +150,23 @@ Kammi is a minimalist desktop writing application for Mac and Windows. It's desi
 > Kammi is a minimalist writing sanctuary. No distractions. No clutter. Just you and your words.
 
 ### Features
-> **Greets you by name**
-> "Good evening, Olli." Kammi knows when you arrive and welcomes you warmly.
+> **Greets you by name**  
+> "Good evening, Olli." Kammi knows when you arrive.
 >
-> **Saves every word**
-> Auto-saves continuously to your Documents folder. Your work is always safe.
+> **Saves every word**  
+> Auto-saves continuously. Your work is always safe.
 >
-> **Resume anytime**
-> Close the app mid-sentence. Come back tomorrow. Pick up exactly where you left off.
+> **Browse your sessions**  
+> Return to any piece you've started. Rename files freely.
+>
+> **Make it yours**  
+> Three curated themes, or save your own custom setup.
 
-### Download Section
+### Download
 > **Start writing today.**
-> Free. No sign-up. No cloud. Your words stay on your computer.
+> Free to try. $9 to keep forever. No subscriptions.
 
 ---
 
-## Pages Needed
-
-1. **Home** (landing page) — Hero, features, download, footer
-2. **Privacy Policy** — Simple page, placeholder text is fine for now
-3. **Support** — Just an email link: `support@kammi.app` (or your email)
-
----
-
-## Technical Notes
-- Mobile responsive (but focus on desktop — that's where writers download apps)
-- Dark mode by default (matches the app)
-- Fast, lightweight — no heavy animations or videos
-- Download buttons can link to GitHub Releases for now (or placeholder `#`)
-
----
-
-## Reference Screenshot
-The app looks like this when opened:
-- Fullscreen dark background (`#1a1a1a`)
-- Centered greeting: "Good evening, Olli" in italic Georgia
-- Below: "Continue your last piece" / "Start new"
-- Writing mode: Just a blinking cursor on a blank page
-
----
-
-## Summary for Lovable
-Build a single-page landing site for "Kammi" — a minimalist writing app. Use the dark warm color palette above, Georgia font, and elegant minimal design. Include a hero with download CTA, optional features section, and footer with privacy/support links. The vibe should feel like a cozy, literary sanctuary.
+## Summary
+Single-page landing site for Kammi — minimalist writing app. Dark warm palette (Midnight theme), Georgia font, elegant minimal design. Hero with download CTA, features highlighting session picker and custom themes, and footer with privacy/support links. The vibe: cozy, literary sanctuary.
