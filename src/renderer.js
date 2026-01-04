@@ -44,6 +44,7 @@ const els = {
     settingsFontsize: document.getElementById('settings-fontsize'),
     settingsBgcolor: document.getElementById('settings-bgcolor'),
     settingsBgcolorHex: document.getElementById('settings-bgcolor-hex'),
+    settingsFadeEffect: document.getElementById('settings-fade-effect'),
     fontSizeValue: document.getElementById('font-size-value')
 };
 
@@ -136,20 +137,96 @@ function initEditor() {
         onUpdate: ({ editor }) => {
             handleInput();
 
-            // Update Bubble Menu states
-            document.getElementById('bold-btn').classList.toggle('is-active', editor.isActive('bold'));
-            document.getElementById('italic-btn').classList.toggle('is-active', editor.isActive('italic'));
-            document.getElementById('bullet-btn').classList.toggle('is-active', editor.isActive('bulletList'));
-            document.getElementById('number-btn').classList.toggle('is-active', editor.isActive('orderedList'));
+            // Update Bubble Menu states (with null checks)
+            document.getElementById('bold-btn')?.classList.toggle('is-active', editor.isActive('bold'));
+            document.getElementById('italic-btn')?.classList.toggle('is-active', editor.isActive('italic'));
+            document.getElementById('bullet-btn')?.classList.toggle('is-active', editor.isActive('bulletList'));
+            document.getElementById('number-btn')?.classList.toggle('is-active', editor.isActive('orderedList'));
         },
         onSelectionUpdate: ({ editor }) => {
-            // Validate states on selection change too
-            document.getElementById('bold-btn').classList.toggle('is-active', editor.isActive('bold'));
-            document.getElementById('italic-btn').classList.toggle('is-active', editor.isActive('italic'));
-            document.getElementById('bullet-btn').classList.toggle('is-active', editor.isActive('bulletList'));
-            document.getElementById('number-btn').classList.toggle('is-active', editor.isActive('orderedList'));
+            // Validate states on selection change too (with null checks)
+            document.getElementById('bold-btn')?.classList.toggle('is-active', editor.isActive('bold'));
+            document.getElementById('italic-btn')?.classList.toggle('is-active', editor.isActive('italic'));
+            document.getElementById('bullet-btn')?.classList.toggle('is-active', editor.isActive('bulletList'));
+            document.getElementById('number-btn')?.classList.toggle('is-active', editor.isActive('orderedList'));
         },
     });
+
+    // Set up fade trailing text effect
+    setTimeout(() => setupFadeEffect(), 100);
+}
+
+/**
+ * Fade Trailing Text - Pen-on-paper focus effect
+ * 
+ * Uses dynamic CSS injection with :nth-child selectors.
+ * This approach works because CSS selectors persist even when
+ * ProseMirror recreates DOM elements during editing.
+ */
+let fadeStyleElement = null;
+
+function setupFadeEffect() {
+    // Create a style element for dynamic fade CSS
+    fadeStyleElement = document.createElement('style');
+    fadeStyleElement.id = 'fade-effect-styles';
+    document.head.appendChild(fadeStyleElement);
+
+    // Apply fade on every editor transaction
+    editor.on('transaction', () => {
+        requestAnimationFrame(applyFadeEffect);
+    });
+
+    // Initial application
+    setTimeout(applyFadeEffect, 100);
+}
+
+function applyFadeEffect() {
+    if (!editor || !editor.view || !fadeStyleElement) return;
+
+    // If fade effect is disabled, clear any existing fade CSS
+    if (settings && settings.fadeEffect === false) {
+        fadeStyleElement.textContent = '';
+        return;
+    }
+
+    try {
+        const { from } = editor.state.selection;
+        const $pos = editor.state.doc.resolve(from);
+
+        // Get current block index (0-based, top-level blocks)
+        const currentBlockIndex = $pos.index(0);
+
+        // Build CSS rules using :nth-child selectors
+        // Current block and after = full opacity (no rule needed)
+        // Blocks before cursor = fading opacity based on distance
+        let css = '';
+
+        for (let i = 0; i < currentBlockIndex; i++) {
+            const distance = currentBlockIndex - i;
+            const childNum = i + 1; // nth-child is 1-indexed
+
+            let opacity;
+            if (distance === 1) opacity = 0.6;
+            else if (distance === 2) opacity = 0.35;
+            else if (distance === 3) opacity = 0.2;
+            else if (distance === 4) opacity = 0.12;
+            else opacity = 0.08; // distance >= 5
+
+            css += `.writing-editor > *:nth-child(${childNum}) { opacity: ${opacity} !important; }\n`;
+        }
+
+        fadeStyleElement.textContent = css;
+    } catch (e) {
+        // Silently ignore errors
+    }
+}
+
+/**
+ * Update fade effect state based on current settings
+ * Called when settings are saved to immediately apply the change
+ */
+function updateFadeEffectState() {
+    applyFadeEffect();
 }
 
 // ========================================
@@ -503,6 +580,9 @@ function openSettings() {
     els.settingsBgcolor.value = theme.bgColor;
     els.settingsBgcolorHex.value = theme.bgColor;
 
+    // Fade effect toggle (default to true if not set)
+    els.settingsFadeEffect.checked = settings.fadeEffect !== false;
+
     // Show Saved tile if a saved theme exists
     const savedTile = document.getElementById('saved-theme-tile');
     if (settings.savedTheme) {
@@ -526,8 +606,10 @@ async function saveSettings() {
         bgColor: els.settingsBgcolor.value,
         textColor: getContrastColor(els.settingsBgcolor.value)
     };
+    settings.fadeEffect = els.settingsFadeEffect.checked;
 
     applyTheme(settings.customTheme);
+    updateFadeEffectState();
     await window.kammi.saveSettings(settings);
     resumeWriting();
 }

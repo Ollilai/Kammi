@@ -262,6 +262,32 @@
             margin-bottom: 0;
         }
 
+        /* Fade trailing text - pen-on-paper focus effect */
+        .writing-editor p,
+        .writing-editor li {
+            transition: opacity 0.4s ease-out;
+        }
+
+        .writing-editor [data-fade="1"] {
+            opacity: 0.6;
+        }
+
+        .writing-editor [data-fade="2"] {
+            opacity: 0.35;
+        }
+
+        .writing-editor [data-fade="3"] {
+            opacity: 0.2;
+        }
+
+        .writing-editor [data-fade="4"] {
+            opacity: 0.12;
+        }
+
+        .writing-editor [data-fade="5"] {
+            opacity: 0.08;
+        }
+
         /* Bold and Italic styling - inherits text color */
         .writing-editor strong {
             font-weight: bold;
@@ -382,7 +408,8 @@
 
         .menu-item {
             font-size: 1.1em;
-            color: var(--text-color);
+            color: #c4b69c;
+            /* Fixed light color for dark overlay */
             cursor: pointer;
             transition: opacity 0.2s;
         }
@@ -594,6 +621,15 @@
             <div id="font-size-preview"
                 style="margin-top: 0.5rem; padding: 0.5rem; border: 1px dashed var(--text-color-dim); font-size: 20px;">
                 Preview text at this size
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <label class="settings-label">Effects</label>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <input type="checkbox" id="settings-fade-effect" checked>
+                <label for="settings-fade-effect" style="cursor: pointer;">Fade trailing text (pen-on-paper
+                    focus)</label>
             </div>
         </div>
 

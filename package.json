@@ -1,6 +1,6 @@
 {
     "name": "kammi",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "A minimalist writing refuge for creative professionals",
     "main": "main.js",
     "scripts": {

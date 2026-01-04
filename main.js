@@ -141,13 +141,19 @@ ipcMain.handle('list-sessions', async () => {
  * Create the main window
  */
 function createWindow() {
+    // Platform-specific window chrome
+    // Mac: hiddenInset gives native traffic lights but hidden title bar
+    // Windows: frame:false for true frameless (since app is fullscreen with ESC menu)
+    const isMac = process.platform === 'darwin';
+
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 800,
         minWidth: 600,
         minHeight: 400,
         backgroundColor: '#1a1a1a',
-        titleBarStyle: 'hiddenInset',
+        titleBarStyle: isMac ? 'hiddenInset' : 'default',
+        frame: isMac ? true : false,  // Frameless on Windows for clean fullscreen
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
