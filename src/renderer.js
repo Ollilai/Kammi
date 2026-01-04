@@ -326,8 +326,8 @@ function setupEventListeners() {
     // Menu items
     document.getElementById('menu-resume').addEventListener('click', resumeWriting);
     document.getElementById('menu-settings').addEventListener('click', openSettings);
-    document.getElementById('menu-privacy').addEventListener('click', () => window.kammi.openExternal('https://kammi-git-main-olli-laitinens-projects.vercel.app/privacy'));
-    document.getElementById('menu-support').addEventListener('click', () => window.kammi.openExternal('https://kammi-git-main-olli-laitinens-projects.vercel.app/support'));
+    document.getElementById('menu-privacy').addEventListener('click', () => window.kammi.openExternal('https://kammi.vercel.app/privacy'));
+    document.getElementById('menu-support').addEventListener('click', () => window.kammi.openExternal('https://kammi.vercel.app/support'));
     document.getElementById('menu-quit').addEventListener('click', () => window.close());
 
     // Settings controls - LIVE PREVIEW on all changes
@@ -491,9 +491,13 @@ async function showSessionList() {
     const sessionList = document.getElementById('session-list');
     const browseBtn = document.getElementById('greeting-browse');
 
-    // Toggle visibility
-    if (sessionList.style.display === 'block') {
-        sessionList.style.display = 'none';
+    // Toggle visibility with animation
+    const isOpen = sessionList.style.maxHeight && sessionList.style.maxHeight !== '0px';
+
+    if (isOpen) {
+        // Collapse
+        sessionList.style.maxHeight = '0';
+        sessionList.style.opacity = '0';
         browseBtn.textContent = 'Browse all sessions';
         return;
     }
@@ -516,7 +520,10 @@ async function showSessionList() {
         item.addEventListener('click', () => loadSession(item.dataset.filename));
     });
 
-    sessionList.style.display = 'block';
+    // Expand with animation
+    sessionList.style.maxHeight = '200px';
+    sessionList.style.opacity = '1';
+    sessionList.style.overflowY = 'auto';
     browseBtn.textContent = 'Hide sessions';
 }
 
@@ -556,12 +563,27 @@ function startNewSession() {
 }
 
 function startWriting() {
-    showScreen('writing');
-    // Focus the Tiptap editor
-    editor.commands.focus();
-    requestAnimationFrame(() => editor.commands.focus());
-    setTimeout(() => editor.commands.focus(), 50);
-    setTimeout(() => editor.commands.focus(), 150);
+    // Immediately hide greeting content to prevent text overlap during transition
+    const greetingContent = document.getElementById('greeting-options');
+    const greetingText = document.getElementById('greeting-text');
+    if (greetingContent) greetingContent.style.opacity = '0';
+    if (greetingText) greetingText.style.opacity = '0';
+
+    // Short delay, then switch screens
+    setTimeout(() => {
+        showScreen('writing');
+        // Focus the Tiptap editor
+        editor.commands.focus();
+        requestAnimationFrame(() => editor.commands.focus());
+        setTimeout(() => editor.commands.focus(), 50);
+        setTimeout(() => editor.commands.focus(), 150);
+
+        // Reset greeting opacity for next time (after transition is done)
+        setTimeout(() => {
+            if (greetingContent) greetingContent.style.opacity = '';
+            if (greetingText) greetingText.style.opacity = '';
+        }, 1200);
+    }, 200);
 }
 
 function resumeWriting() {

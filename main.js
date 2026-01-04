@@ -1,12 +1,42 @@
 /**
  * MAIN PROCESS - main.js
  * 
- * Handles: window creation, file saving, and settings storage.
+ * Handles: window creation, file saving, settings storage, and auto-updates.
  */
 
-const { app, BrowserWindow, ipcMain, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
+
+// Configure auto-updater
+autoUpdater.autoDownload = true;
+autoUpdater.autoInstallOnAppQuit = true;
+
+// Auto-update event handlers
+autoUpdater.on('update-available', (info) => {
+    console.log('Update available:', info.version);
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+    console.log('Update downloaded:', info.version);
+    // Show dialog asking user to restart
+    dialog.showMessageBox({
+        type: 'info',
+        title: 'Update Ready',
+        message: `Kammi ${info.version} is ready to install.`,
+        detail: 'The update will be installed when you restart.',
+        buttons: ['Restart Now', 'Later']
+    }).then((result) => {
+        if (result.response === 0) {
+            autoUpdater.quitAndInstall();
+        }
+    });
+});
+
+autoUpdater.on('error', (error) => {
+    console.error('Auto-update error:', error);
+});
 
 // Open URL in default browser
 ipcMain.handle('open-external', async (event, url) => {
@@ -181,6 +211,11 @@ function createWindow() {
 // App lifecycle
 app.whenReady().then(() => {
     createWindow();
+
+    // Check for updates (only in production)
+    if (process.env.NODE_ENV !== 'development') {
+        autoUpdater.checkForUpdatesAndNotify();
+    }
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {

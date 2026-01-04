@@ -20,14 +20,6 @@
             --transition-speed: 1200ms;
         }
 
-        /* ... skipped ... */
-
-        /* Style the paragraph elements inside the editor */
-        .writing-editor p {
-            margin: 0;
-            /* No auto-gap. User must hit Enter twice for gap. */
-        }
-
         /* ========================================
        RESET & BASE
        ======================================== */
@@ -209,6 +201,7 @@
         .greeting-text {
             font-size: 1.6em;
             font-style: italic;
+            transition: opacity 0.2s ease;
         }
 
         .greeting-hint {
@@ -526,14 +519,14 @@
     <!-- GREETING -->
     <div id="greeting-screen" class="screen">
         <p class="greeting-text" id="greeting-text"></p>
-        <div id="greeting-options" style="margin-top: 2rem; text-align: center;">
+        <div id="greeting-options" style="margin-top: 2rem; text-align: center; transition: opacity 0.2s ease;">
             <p id="greeting-continue" style="cursor: pointer; margin-bottom: 1rem; display: none;">Continue your last
                 piece</p>
             <p id="greeting-browse"
                 style="cursor: pointer; margin-bottom: 1rem; color: var(--text-color-dim); display: none;">Browse all
                 sessions</p>
             <div id="session-list"
-                style="display: none; margin-bottom: 1rem; max-height: 200px; overflow-y: auto; text-align: left; padding: 0 2rem;">
+                style="max-height: 0; overflow: hidden; opacity: 0; margin-bottom: 1rem; text-align: left; padding: 0 2rem; transition: max-height 0.4s ease, opacity 0.3s ease;">
             </div>
             <p id="greeting-new" class="greeting-hint" style="cursor: pointer;">Start new</p>
         </div>

@@ -33,5 +33,3 @@ contextBridge.exposeInMainWorld('kammi', {
     saveSettings: (settings) =>
         ipcRenderer.invoke('save-settings', settings)
 });
-
-console.log('🏠 Kammi preload ready');
