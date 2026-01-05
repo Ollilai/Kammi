@@ -13,7 +13,7 @@
             --bg-color: #1a1a1a;
             --text-color: #c4b69c;
             --text-color-dim: rgba(196, 182, 156, 0.4);
-            --font-family: Georgia, serif;
+            --font-family: 'Garamond', 'EB Garamond', 'Cormorant Garamond', serif;
             --font-size: 20px;
             --line-height: 1.6;
             /* Reduced from 1.8 */
@@ -171,19 +171,29 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
+        .theme-daily-pages {
+            background: #fff8e7;
+            color: #5c4a3a;
+        }
+
+        .theme-golden-hour {
+            background: #2c2418;
+            color: #d4a55a;
+        }
+
         .theme-midnight {
             background: #1a1a1a;
             color: #c4b69c;
         }
 
-        .theme-paper {
-            background: #faf8f0;
-            color: #4a4a4a;
+        .theme-3am {
+            background: #0f0f12;
+            color: #8fa4b8;
         }
 
-        .theme-focus {
-            background: #ffffff;
-            color: #1a1a1a;
+        .theme-first-light {
+            background: #fdfbf5;
+            color: #6b5344;
         }
 
         .theme-custom {
@@ -418,19 +428,35 @@
             background: var(--bg-color);
             z-index: 200;
             padding: 5vh 10vw;
-            align-items: flex-start;
+            align-items: center;
+            justify-content: flex-start;
             overflow-y: auto;
         }
 
         .settings-title {
             font-size: 1.4em;
             margin-bottom: 2rem;
+            text-align: center;
         }
 
         .settings-group {
             margin-bottom: 2rem;
             width: 100%;
             max-width: 600px;
+        }
+
+        .settings-colors-row {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .settings-colors-row .settings-group {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 2rem;
         }
 
         .settings-label {
@@ -478,6 +504,7 @@
             margin-top: 2rem;
             display: flex;
             gap: 1rem;
+            justify-content: center;
         }
 
         .settings-btn {
@@ -508,9 +535,11 @@
     <div id="onboarding-theme" class="screen">
         <p class="theme-title">Choose your atmosphere</p>
         <div class="theme-options">
+            <div class="theme-option theme-first-light" data-theme="first-light">First Light</div>
+            <div class="theme-option theme-daily-pages" data-theme="daily-pages">Daily Pages</div>
+            <div class="theme-option theme-golden-hour" data-theme="golden-hour">Golden Hour</div>
             <div class="theme-option theme-midnight" data-theme="midnight">Midnight</div>
-            <div class="theme-option theme-paper" data-theme="paper">Paper</div>
-            <div class="theme-option theme-focus" data-theme="focus">Focus</div>
+            <div class="theme-option theme-3am" data-theme="3am">3 AM</div>
             <div class="theme-option theme-custom" data-theme="custom">Custom</div>
         </div>
         <button class="theme-continue" id="theme-continue">Continue</button>
@@ -574,18 +603,24 @@
 
         <div class="settings-group">
             <label class="settings-label">Quick Themes</label>
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <div class="theme-preset" data-theme="first-light"
+                    style="width: 90px; height: 50px; background: #fdfbf5; color: #6b5344; border: 1px solid var(--text-color-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.7em;">
+                    First Light</div>
+                <div class="theme-preset" data-theme="daily-pages"
+                    style="width: 90px; height: 50px; background: #fff8e7; color: #5c4a3a; border: 1px solid var(--text-color-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.7em;">
+                    Daily Pages</div>
+                <div class="theme-preset" data-theme="golden-hour"
+                    style="width: 90px; height: 50px; background: #2c2418; color: #d4a55a; border: 1px solid var(--text-color-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.7em;">
+                    Golden Hour</div>
                 <div class="theme-preset" data-theme="midnight"
-                    style="width: 80px; height: 50px; background: #1a1a1a; color: #c4b69c; border: 1px solid var(--text-color-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75em;">
+                    style="width: 90px; height: 50px; background: #1a1a1a; color: #c4b69c; border: 1px solid var(--text-color-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.7em;">
                     Midnight</div>
-                <div class="theme-preset" data-theme="paper"
-                    style="width: 80px; height: 50px; background: #faf8f0; color: #4a4a4a; border: 1px solid var(--text-color-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75em;">
-                    Paper</div>
-                <div class="theme-preset" data-theme="focus"
-                    style="width: 80px; height: 50px; background: #ffffff; color: #1a1a1a; border: 1px solid var(--text-color-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75em;">
-                    Focus</div>
+                <div class="theme-preset" data-theme="3am"
+                    style="width: 90px; height: 50px; background: #0f0f12; color: #8fa4b8; border: 1px solid var(--text-color-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.7em;">
+                    3 AM</div>
                 <div class="theme-preset" data-theme="saved" id="saved-theme-tile"
-                    style="width: 80px; height: 50px; border: 2px dashed var(--text-color-dim); display: none; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75em;">
+                    style="width: 90px; height: 50px; border: 2px dashed var(--text-color-dim); display: none; align-items: center; justify-content: center; cursor: pointer; font-size: 0.7em;">
                     Saved</div>
             </div>
             <button id="save-theme-btn" class="settings-btn" style="margin-top: 0.75rem; font-size: 0.85em;">Save
@@ -595,17 +630,23 @@
         <div class="settings-group">
             <label class="settings-label">Font</label>
             <div id="font-options" style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <div class="font-option" data-font="Georgia, serif"
-                    style="font-family: Georgia, serif; padding: 0.5rem; border: 1px solid var(--text-color-dim); cursor: pointer;">
-                    Georgia — warm, designed for screens</div>
-                <div class="font-option" data-font="Palatino, 'Palatino Linotype', serif"
+                <div class="font-option" data-font="'Baskerville', 'Baskerville Old Face', 'Libre Baskerville', serif"
+                    style="font-family: Baskerville, 'Baskerville Old Face', serif; padding: 0.5rem; border: 1px solid var(--text-color-dim); cursor: pointer;">
+                    Baskerville — refined, disciplined</div>
+                <div class="font-option" data-font="'Palatino', 'Palatino Linotype', 'Book Antiqua', serif"
                     style="font-family: Palatino, 'Palatino Linotype', serif; padding: 0.5rem; border: 1px solid var(--text-color-dim); cursor: pointer;">
-                    Palatino — literary, quietly elegant</div>
-                <div class="font-option" data-font="'Courier New', monospace"
+                    Palatino — manuscript, personal</div>
+                <div class="font-option" data-font="'Georgia', serif"
+                    style="font-family: Georgia, serif; padding: 0.5rem; border: 1px solid var(--text-color-dim); cursor: pointer;">
+                    Georgia — warm, comfortable</div>
+                <div class="font-option" data-font="'Garamond', 'EB Garamond', 'Cormorant Garamond', serif"
+                    style="font-family: Garamond, 'EB Garamond', serif; padding: 0.5rem; border: 1px solid var(--text-color-dim); cursor: pointer;">
+                    Garamond — literary tradition</div>
+                <div class="font-option" data-font="'Courier New', 'Courier', monospace"
                     style="font-family: 'Courier New', monospace; padding: 0.5rem; border: 1px solid var(--text-color-dim); cursor: pointer;">
                     Courier New — typewriter rhythm</div>
             </div>
-            <input type="hidden" id="settings-font" value="Georgia, serif">
+            <input type="hidden" id="settings-font" value="'Garamond', 'EB Garamond', 'Cormorant Garamond', serif">
         </div>
 
         <div class="settings-group">
@@ -626,11 +667,23 @@
             </div>
         </div>
 
-        <div class="settings-group">
-            <label class="settings-label">Background Color</label>
-            <div class="settings-color-row">
-                <input type="color" id="settings-bgcolor" class="settings-color-picker" value="#1a1a1a">
-                <input type="text" id="settings-bgcolor-hex" class="settings-input" value="#1a1a1a" style="width:120px">
+        <div class="settings-colors-row">
+            <div class="settings-group">
+                <label class="settings-label">Background Color</label>
+                <div class="settings-color-row">
+                    <input type="color" id="settings-bgcolor" class="settings-color-picker" value="#1a1a1a">
+                    <input type="text" id="settings-bgcolor-hex" class="settings-input" value="#1a1a1a"
+                        style="width:100px">
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <label class="settings-label">Text Color</label>
+                <div class="settings-color-row">
+                    <input type="color" id="settings-textcolor" class="settings-color-picker" value="#c4b69c">
+                    <input type="text" id="settings-textcolor-hex" class="settings-input" value="#c4b69c"
+                        style="width:100px">
+                </div>
             </div>
         </div>
 

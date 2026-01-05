@@ -17,11 +17,13 @@ import { BubbleMenu } from '@tiptap/extension-bubble-menu'
 
 const AUTOSAVE_DELAY = 1000;
 
-// Theme presets
+// Theme presets - Time-based themes with curated font pairings
 const THEMES = {
-    midnight: { fontFamily: 'Georgia, serif', fontSize: 20, bgColor: '#1a1a1a', textColor: '#c4b69c' },
-    paper: { fontFamily: "Palatino, 'Palatino Linotype', serif", fontSize: 20, bgColor: '#faf8f0', textColor: '#4a4a4a' },
-    focus: { fontFamily: "'Courier New', monospace", fontSize: 20, bgColor: '#ffffff', textColor: '#1a1a1a' }
+    'first-light': { fontFamily: "'Baskerville', 'Baskerville Old Face', 'Libre Baskerville', serif", fontSize: 20, bgColor: '#fdfbf5', textColor: '#6b5344' },
+    'daily-pages': { fontFamily: "'Palatino', 'Palatino Linotype', 'Book Antiqua', serif", fontSize: 20, bgColor: '#fff8e7', textColor: '#5c4a3a' },
+    'golden-hour': { fontFamily: "'Georgia', serif", fontSize: 20, bgColor: '#2c2418', textColor: '#d4a55a' },
+    'midnight': { fontFamily: "'Garamond', 'EB Garamond', 'Cormorant Garamond', serif", fontSize: 20, bgColor: '#1a1a1a', textColor: '#c4b69c' },
+    '3am': { fontFamily: "'Courier New', 'Courier', monospace", fontSize: 20, bgColor: '#0f0f12', textColor: '#8fa4b8' }
 };
 
 // DOM
@@ -44,6 +46,8 @@ const els = {
     settingsFontsize: document.getElementById('settings-fontsize'),
     settingsBgcolor: document.getElementById('settings-bgcolor'),
     settingsBgcolorHex: document.getElementById('settings-bgcolor-hex'),
+    settingsTextcolor: document.getElementById('settings-textcolor'),
+    settingsTextcolorHex: document.getElementById('settings-textcolor-hex'),
     settingsFadeEffect: document.getElementById('settings-fade-effect'),
     fontSizeValue: document.getElementById('font-size-value')
 };
@@ -340,12 +344,32 @@ function setupEventListeners() {
 
     els.settingsBgcolor.addEventListener('input', () => {
         els.settingsBgcolorHex.value = els.settingsBgcolor.value;
+        // Auto-adjust text color for good contrast
+        const autoTextColor = getContrastColor(els.settingsBgcolor.value);
+        els.settingsTextcolor.value = autoTextColor;
+        els.settingsTextcolorHex.value = autoTextColor;
         applyLivePreview();
     });
 
     els.settingsBgcolorHex.addEventListener('input', () => {
         if (/^#[0-9A-Fa-f]{6}$/.test(els.settingsBgcolorHex.value)) {
             els.settingsBgcolor.value = els.settingsBgcolorHex.value;
+            // Auto-adjust text color for good contrast
+            const autoTextColor = getContrastColor(els.settingsBgcolorHex.value);
+            els.settingsTextcolor.value = autoTextColor;
+            els.settingsTextcolorHex.value = autoTextColor;
+            applyLivePreview();
+        }
+    });
+
+    els.settingsTextcolor.addEventListener('input', () => {
+        els.settingsTextcolorHex.value = els.settingsTextcolor.value;
+        applyLivePreview();
+    });
+
+    els.settingsTextcolorHex.addEventListener('input', () => {
+        if (/^#[0-9A-Fa-f]{6}$/.test(els.settingsTextcolorHex.value)) {
+            els.settingsTextcolor.value = els.settingsTextcolorHex.value;
             applyLivePreview();
         }
     });
@@ -356,7 +380,7 @@ function setupEventListeners() {
             fontFamily: els.settingsFont.value,
             fontSize: parseInt(els.settingsFontsize.value),
             bgColor: els.settingsBgcolor.value,
-            textColor: getContrastColor(els.settingsBgcolor.value)
+            textColor: els.settingsTextcolor.value
         };
         applyTheme(liveTheme);
     }
@@ -396,6 +420,8 @@ function setupEventListeners() {
             // Update form values to match preset
             els.settingsBgcolor.value = theme.bgColor;
             els.settingsBgcolorHex.value = theme.bgColor;
+            els.settingsTextcolor.value = theme.textColor;
+            els.settingsTextcolorHex.value = theme.textColor;
             els.settingsFont.value = theme.fontFamily;
             els.settingsFontsize.value = theme.fontSize;
             els.fontSizeValue.textContent = theme.fontSize;
@@ -422,7 +448,7 @@ function setupEventListeners() {
             fontFamily: els.settingsFont.value,
             fontSize: parseInt(els.settingsFontsize.value),
             bgColor: els.settingsBgcolor.value,
-            textColor: getContrastColor(els.settingsBgcolor.value)
+            textColor: els.settingsTextcolor.value
         };
         await window.kammi.saveSettings(settings);
 
@@ -601,6 +627,8 @@ function openSettings() {
     els.fontSizeValue.textContent = theme.fontSize;
     els.settingsBgcolor.value = theme.bgColor;
     els.settingsBgcolorHex.value = theme.bgColor;
+    els.settingsTextcolor.value = theme.textColor;
+    els.settingsTextcolorHex.value = theme.textColor;
 
     // Fade effect toggle (default to true if not set)
     els.settingsFadeEffect.checked = settings.fadeEffect !== false;
@@ -626,7 +654,7 @@ async function saveSettings() {
         fontFamily: els.settingsFont.value,
         fontSize: parseInt(els.settingsFontsize.value),
         bgColor: els.settingsBgcolor.value,
-        textColor: getContrastColor(els.settingsBgcolor.value)
+        textColor: els.settingsTextcolor.value
     };
     settings.fadeEffect = els.settingsFadeEffect.checked;
 
