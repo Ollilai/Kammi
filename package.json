@@ -22,7 +22,8 @@
         "publish": {
             "provider": "github",
             "owner": "Ollilai",
-            "repo": "Kammi"
+            "repo": "Kammi",
+            "releaseType": "release"
         },
         "directories": {
             "output": "dist"
