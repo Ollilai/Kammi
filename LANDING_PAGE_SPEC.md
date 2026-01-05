@@ -1,4 +1,4 @@
-# Kammi Landing Page Specification
+# Kammi Landing Page Specification (v1.1.0)
 
 ## Brand Philosophy
 - **A refuge for writers** — not a productivity tool
@@ -11,40 +11,49 @@
 
 ## Design System
 
-### Theme Presets
+### Time-Based Theme Presets
 
-| Theme | Background | Text | Font | Mood |
-|-------|------------|------|------|------|
-| **Midnight** (default) | `#1a1a1a` | `#c4b69c` | Georgia | Cozy, night owl |
-| **Paper** | `#faf8f0` | `#4a4a4a` | Palatino | Literary, timeless |
-| **Focus** | `#ffffff` | `#1a1a1a` | Courier New | Stark, typewriter |
+Each theme pairs a specific time of day with a curated font and color combination.
+
+| Theme | Time | Background | Text | Font | Mood |
+|-------|------|------------|------|------|------|
+| **First Light** | 4-6 AM | `#fdfbf5` | `#6b5344` | Baskerville | Discipline, clarity, intention |
+| **Daily Pages** | 6-9 AM | `#fff8e7` | `#5c4a3a` | Palatino | Manuscript, personal, journaling |
+| **Golden Hour** | 5-7 PM | `#2c2418` | `#d4a55a` | Georgia | Warm, comfortable, pleasure |
+| **Midnight** (default) | 10 PM-1 AM | `#1a1a1a` | `#c4b69c` | Garamond | Literary tradition, gravitas |
+| **3 AM** | 2-4 AM | `#0f0f12` | `#8fa4b8` | Courier New | Urgency, rhythm, forward momentum |
 
 ### Typography
-| Font | Usage | Mood |
-|------|-------|------|
-| **Georgia, serif** | Warm, screen-optimized | Disappears while you write |
-| **Palatino, 'Palatino Linotype', serif** | Literary, elegant | Classical book feel |
-| **'Courier New', monospace** | Typewriter rhythm | Forward momentum |
+
+5 curated fonts, each with cross-platform fallbacks:
+
+| Font | CSS Stack | Mood |
+|------|-----------|------|
+| **Baskerville** | `'Baskerville', 'Baskerville Old Face', 'Libre Baskerville', serif` | Refined, disciplined, 18th-century elegance |
+| **Palatino** | `'Palatino', 'Palatino Linotype', 'Book Antiqua', serif` | Manuscript, personal, calligraphic |
+| **Georgia** | `'Georgia', serif` | Warm, comfortable, screen-optimized |
+| **Garamond** | `'Garamond', 'EB Garamond', 'Cormorant Garamond', serif` | Literary tradition, 500 years of writers |
+| **Courier New** | `'Courier New', 'Courier', monospace` | Typewriter rhythm, urgency |
 
 - **Body size**: 20px default (adjustable 14-32px)
 - **Line height**: 1.6
-- **Headings**: Same font, italic for elegance
 
-### Visual Style
-- **Minimal** — No borders, shadows, or visual noise
-- **Warm** — Sepia tones in dark mode, cream in light
-- **Elegant** — Subtle transitions, generous whitespace
-- **Fullscreen feel** — Centered content, responsive padding
+### Color Philosophy
+- **Background**: Sets the mood (dark for night writing, warm cream for morning)
+- **Text**: Curated to complement background with optimal readability
+- **Auto-contrast**: When users pick custom background, text auto-adjusts
+- **Manual override**: Full control with dedicated text color picker
 
 ---
 
-## Features (v1.0.2)
+## Features (v1.1.0)
 
 ### Core
 1. **Personal Greeting** — "Good evening, Olli" based on time of day
 2. **Auto-Save** — Continuous save to ~/Documents/Kammi
 3. **Session Picker** — Browse and resume any previous session
-4. **Theme Presets** — Midnight, Paper, Focus + custom save
+4. **5 Time-Based Themes** — First Light, Daily Pages, Golden Hour, Midnight, 3 AM
+5. **Save Custom Theme** — Preserve your personal color/font combination
 
 ### Text Formatting
 - **Bubble Menu** — Appears on text selection
@@ -52,63 +61,11 @@
 - **Keyboard shortcuts** — Cmd+B, Cmd+I
 
 ### Customization
-- **Save Custom Theme** — Preserve your settings as a preset
-- **Font Selection** — Georgia, Palatino, Courier New
+- **5 Fonts** — Baskerville, Palatino, Georgia, Garamond, Courier New
 - **Font Size** — 14-32px slider
 - **Background Color** — Picker + hex input
-
----
-
-## Page Structure
-
-### Hero Section
-**Background**: `#1a1a1a`  
-**Layout**: Centered, 100vh
-
-**Content**:
-- **Tagline** (large, italic Georgia): "A refuge for writers"
-- **Subheading**: "Distraction-free. Personal. Beautiful."
-- **CTA**: "Download for Mac" + "Windows" link
-- **Theme Showcase**: Optional 3 tiles showing Midnight/Paper/Focus
-
-### Features Section
-**Background**: `#1a1a1a`  
-**Layout**: 3 columns or stacked mobile
-
-1. **Personal Greeting** — "Kammi greets you by name and time of day"
-2. **Auto-Save** — "Your words are saved continuously"
-3. **Session Picker** — "Browse and resume any of your writing sessions"
-4. **Save Your Theme** — "Customize colors and fonts, save as your preset"
-
-### Download Section
-**Background**: `#faf8f0` (Paper theme)  
-**Text**: `#4a4a4a`
-
-**Model**: $9 one-time OR free scholarship
-- **CTA**: "Get Kammi — $9" 
-- **Secondary**: "Can't afford it? Request a scholarship"
-- **Message**: "No subscriptions. No accounts. Pay once, own forever."
-
-**Download buttons**:
-- Mac (.dmg): `https://github.com/Ollilai/Kammi/releases/latest`
-- Windows (.exe): `https://github.com/Ollilai/Kammi/releases/latest`
-
-### Footer
-**Background**: `#1a1a1a`  
-**Links**: 
-- Privacy: `/privacy`
-- Support: `/support`
-- GitHub (optional): `https://github.com/Ollilai/Kammi`
-
----
-
-## Pages
-
-| Page | Purpose |
-|------|---------|
-| `/` | Landing — Hero, features, download, footer |
-| `/privacy` | Privacy policy |
-| `/support` | Support contact / FAQ |
+- **Text Color** — Picker + hex input (auto-adjusts, manual override)
+- **Fade Effect** — Pen-on-paper focus (toggleable)
 
 ---
 
@@ -120,25 +77,77 @@
     --bg-color: #1a1a1a;
     --text-color: #c4b69c;
     --text-color-dim: rgba(196, 182, 156, 0.4);
-    --font-family: Georgia, serif;
+    --font-family: 'Garamond', 'EB Garamond', 'Cormorant Garamond', serif;
     --font-size: 20px;
     --line-height: 1.6;
 }
 
-/* Paper theme section */
-.theme-paper {
-    --bg-color: #faf8f0;
-    --text-color: #4a4a4a;
-    --font-family: Palatino, 'Palatino Linotype', serif;
+/* First Light theme */
+.theme-first-light {
+    --bg-color: #fdfbf5;
+    --text-color: #6b5344;
+    --font-family: 'Baskerville', 'Baskerville Old Face', 'Libre Baskerville', serif;
 }
 
-/* Focus theme section */
-.theme-focus {
-    --bg-color: #ffffff;
-    --text-color: #1a1a1a;
-    --font-family: 'Courier New', monospace;
+/* Daily Pages theme */
+.theme-daily-pages {
+    --bg-color: #fff8e7;
+    --text-color: #5c4a3a;
+    --font-family: 'Palatino', 'Palatino Linotype', 'Book Antiqua', serif;
+}
+
+/* Golden Hour theme */
+.theme-golden-hour {
+    --bg-color: #2c2418;
+    --text-color: #d4a55a;
+    --font-family: 'Georgia', serif;
+}
+
+/* 3 AM theme */
+.theme-3am {
+    --bg-color: #0f0f12;
+    --text-color: #8fa4b8;
+    --font-family: 'Courier New', 'Courier', monospace;
 }
 ```
+
+---
+
+## Page Structure
+
+### Hero Section
+**Background**: `#1a1a1a` (Midnight)  
+**Layout**: Centered, 100vh
+
+**Content**:
+- **Tagline** (large, italic Garamond): "A refuge for writers"
+- **Subheading**: "Distraction-free. Personal. Beautiful."
+- **CTA**: "Download for Mac" + "Windows" link
+- **Theme Showcase**: 5 tiles showing time-based themes
+
+### Features Section
+**Background**: `#1a1a1a`  
+**Layout**: 3 columns or stacked mobile
+
+1. **Personal Greeting** — "Kammi greets you by name and time of day"
+2. **Auto-Save** — "Your words are saved continuously"
+3. **Session Picker** — "Browse and resume any of your writing sessions"
+4. **Make It Yours** — "5 curated themes, 5 fonts, or build your own"
+
+### Download Section
+**Background**: `#fff8e7` (Daily Pages theme)  
+**Text**: `#5c4a3a`
+
+- **CTA**: "Download Kammi"
+- **Message**: "Free. No subscriptions. No accounts. Just writing."
+
+**Download buttons**:
+- Mac (.dmg): `https://github.com/Ollilai/Kammi/releases/latest`
+- Windows (.exe): `https://github.com/Ollilai/Kammi/releases/latest`
+
+### Footer
+**Background**: `#1a1a1a`  
+**Links**: Privacy | Support | GitHub
 
 ---
 
@@ -149,6 +158,12 @@
 > 
 > Kammi is a minimalist writing sanctuary. No distractions. No clutter. Just you and your words.
 
+### Theme Story (Optional)
+> **When do you write?**
+> 
+> First Light. Daily Pages. Golden Hour. Midnight. 3 AM.
+> Each theme is tuned to the mood of the hour — when the words come.
+
 ### Features
 > **Greets you by name**  
 > "Good evening, Olli." Kammi knows when you arrive.
@@ -157,16 +172,16 @@
 > Auto-saves continuously. Your work is always safe.
 >
 > **Browse your sessions**  
-> Return to any piece you've started. Rename files freely.
+> Return to any piece you've started.
 >
 > **Make it yours**  
-> Three curated themes, or save your own custom setup.
+> Five curated themes. Five fonts. Or build your own.
 
 ### Download
 > **Start writing today.**
-> Free to try. $9 to keep forever. No subscriptions.
+> Free forever. No subscriptions. No accounts.
 
 ---
 
 ## Summary
-Single-page landing site for Kammi — minimalist writing app. Dark warm palette (Midnight theme), Georgia font, elegant minimal design. Hero with download CTA, features highlighting session picker and custom themes, and footer with privacy/support links. The vibe: cozy, literary sanctuary.
+Single-page landing site for Kammi v1.1.0 — minimalist writing app. Dark warm palette (Midnight theme), Garamond font, elegant minimal design. Hero with download CTA, features highlighting time-based themes and customization, and footer with privacy/support links. The vibe: cozy, literary sanctuary for writers who know when their words come.
