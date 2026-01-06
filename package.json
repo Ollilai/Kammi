@@ -39,13 +39,15 @@
             "icon": "assets/icon.png",
             "target": [
                 "dmg"
-            ]
+            ],
+            "artifactName": "Kammi-${arch}.${ext}"
         },
         "win": {
             "icon": "assets/icon.png",
             "target": [
                 "nsis"
-            ]
+            ],
+            "artifactName": "Kammi-Setup.${ext}"
         },
         "nsis": {
             "oneClick": false,
