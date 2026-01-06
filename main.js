@@ -203,6 +203,22 @@ function createWindow() {
 
     mainWindow.setFullScreen(true);
 
+    // Intercept link clicks and open in default browser
+    mainWindow.webContents.on('will-navigate', (event, url) => {
+        // Allow loading our own app files, block external navigation
+        const appUrl = isDev ? 'http://localhost:5173' : 'file://';
+        if (!url.startsWith(appUrl)) {
+            event.preventDefault();
+            shell.openExternal(url);
+        }
+    });
+
+    // Also handle window.open() or target="_blank" links
+    mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+        shell.openExternal(url);
+        return { action: 'deny' };
+    });
+
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
