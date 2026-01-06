@@ -248,6 +248,9 @@ async function init() {
     // Initialize the Tiptap editor
     initEditor();
 
+    // Check for updates (non-blocking)
+    checkForUpdates();
+
     // First launch? Start onboarding
     if (!settings.name) {
         showScreen('onboardingName');
@@ -260,6 +263,37 @@ async function init() {
     }
 
     setupEventListeners();
+}
+
+// ========================================
+// UPDATE CHECK (for unsigned apps)
+// ========================================
+async function checkForUpdates() {
+    try {
+        const updateInfo = await window.kammi.checkForUpdate();
+
+        if (updateInfo && updateInfo.updateAvailable) {
+            const banner = document.getElementById('update-banner');
+            const versionSpan = document.getElementById('update-version');
+            const downloadLink = document.getElementById('update-download-link');
+            const dismissBtn = document.getElementById('update-dismiss');
+
+            versionSpan.textContent = updateInfo.latestVersion;
+
+            downloadLink.addEventListener('click', () => {
+                window.kammi.openExternal(updateInfo.downloadUrl);
+            });
+
+            dismissBtn.addEventListener('click', () => {
+                banner.style.display = 'none';
+            });
+
+            banner.style.display = 'flex';
+        }
+    } catch (e) {
+        // Silently fail - update check is not critical
+        console.log('Update check failed:', e);
+    }
 }
 
 function setupEventListeners() {

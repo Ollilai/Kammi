@@ -43,6 +43,72 @@ ipcMain.handle('open-external', async (event, url) => {
     await shell.openExternal(url);
 });
 
+// Check for updates via GitHub releases API (for unsigned apps)
+ipcMain.handle('check-for-update', async () => {
+    try {
+        const https = require('https');
+        const currentVersion = app.getVersion();
+        
+        return new Promise((resolve) => {
+            const options = {
+                hostname: 'api.github.com',
+                path: '/repos/Ollilai/Kammi/releases/latest',
+                headers: { 'User-Agent': 'Kammi-App' }
+            };
+            
+            const req = https.get(options, (res) => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => {
+                    try {
+                        const release = JSON.parse(data);
+                        const latestVersion = release.tag_name?.replace('v', '') || '';
+                        
+                        // Simple version comparison (works for semver)
+                        const isNewer = latestVersion.localeCompare(currentVersion, undefined, { numeric: true }) > 0;
+                        
+                        if (isNewer) {
+                            // Find the right download URL based on platform
+                            let downloadUrl = release.html_url;
+                            const assets = release.assets || [];
+                            
+                            if (process.platform === 'darwin') {
+                                const macAsset = assets.find(a => a.name.endsWith('.dmg'));
+                                if (macAsset) downloadUrl = macAsset.browser_download_url;
+                            } else if (process.platform === 'win32') {
+                                const winAsset = assets.find(a => a.name.endsWith('.exe') && !a.name.includes('blockmap'));
+                                if (winAsset) downloadUrl = winAsset.browser_download_url;
+                            }
+                            
+                            resolve({
+                                updateAvailable: true,
+                                currentVersion,
+                                latestVersion,
+                                downloadUrl
+                            });
+                        } else {
+                            resolve({ updateAvailable: false, currentVersion });
+                        }
+                    } catch (e) {
+                        resolve({ updateAvailable: false, error: 'Parse error' });
+                    }
+                });
+            });
+            
+            req.on('error', () => {
+                resolve({ updateAvailable: false, error: 'Network error' });
+            });
+            
+            req.setTimeout(5000, () => {
+                req.destroy();
+                resolve({ updateAvailable: false, error: 'Timeout' });
+            });
+        });
+    } catch (error) {
+        return { updateAvailable: false, error: error.message };
+    }
+});
+
 // Paths
 let mainWindow;
 const DOCUMENTS_DIR = app.getPath('documents');

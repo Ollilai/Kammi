@@ -31,5 +31,9 @@ contextBridge.exposeInMainWorld('kammi', {
 
     // Save settings
     saveSettings: (settings) =>
-        ipcRenderer.invoke('save-settings', settings)
+        ipcRenderer.invoke('save-settings', settings),
+
+    // Check for app updates (via GitHub releases)
+    checkForUpdate: () =>
+        ipcRenderer.invoke('check-for-update')
 });

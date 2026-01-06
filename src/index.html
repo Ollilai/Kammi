@@ -519,6 +519,62 @@
         .settings-btn:hover {
             background: rgba(255, 255, 255, 0.1);
         }
+
+        /* ========================================
+           UPDATE NOTIFICATION BANNER
+           ======================================== */
+        .update-banner {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--text-color-dim);
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+            font-size: 0.9em;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .update-banner a {
+            color: var(--text-color);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .update-banner a:hover {
+            opacity: 0.8;
+        }
+
+        .update-dismiss {
+            background: none;
+            border: none;
+            color: var(--text-color-dim);
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 0 0.3rem;
+            line-height: 1;
+        }
+
+        .update-dismiss:hover {
+            color: var(--text-color);
+        }
     </style>
 </head>
 
@@ -546,6 +602,13 @@
     </div>
 
     <!-- GREETING -->
+    <!-- UPDATE NOTIFICATION BANNER -->
+    <div id="update-banner" class="update-banner">
+        <span>Kammi <span id="update-version"></span> is available!</span>
+        <a id="update-download-link">Download</a>
+        <button class="update-dismiss" id="update-dismiss" title="Dismiss">&times;</button>
+    </div>
+
     <div id="greeting-screen" class="screen">
         <p class="greeting-text" id="greeting-text"></p>
         <div id="greeting-options" style="margin-top: 2rem; text-align: center; transition: opacity 0.2s ease;">
